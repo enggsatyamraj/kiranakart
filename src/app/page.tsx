@@ -1,23 +1,49 @@
+"use client"
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import {
   FaSearch, FaUser, FaShoppingCart, FaTruck, FaLeaf, FaWallet, FaHeadset,
   FaStar, FaStarHalfAlt, FaMapMarkerAlt,
   FaPhoneAlt, FaEnvelope, FaClock, FaFacebookF, FaTwitter, FaInstagram,
-  FaLinkedinIn, FaGooglePlay, FaApple, FaArrowUp
+  FaLinkedinIn, FaGooglePlay, FaApple, FaArrowUp, FaTimes
 } from 'react-icons/fa';
 
 export default function Home() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Handle scroll effect for header
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Close mobile menu when a link is clicked
+  const handleLinkClick = () => {
+    setMobileMenuOpen(false);
+  };
+
   return (
     <main className="min-h-screen">
       {/* Header Section */}
-      <header className="sticky top-0 z-50 bg-white shadow-md">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+      <header className={`sticky top-0 z-50 bg-white shadow-md transition-all duration-300 ${scrolled ? 'py-2' : 'py-4'}`}>
+        <div className="container mx-auto px-4 flex justify-between items-center">
           <div className="logo">
             <h1 className="text-2xl font-bold">
               Kirana<span className="text-green-600">Kart</span>
             </h1>
           </div>
+
+          {/* Desktop Navigation */}
           <nav className="hidden md:block">
             <ul className="flex space-x-6">
               <li><Link href="#home" className="text-green-600 font-medium">Home</Link></li>
@@ -28,6 +54,7 @@ export default function Home() {
               <li><Link href="#contact" className="text-gray-700 hover:text-green-600 transition-colors">Contact</Link></li>
             </ul>
           </nav>
+
           <div className="flex items-center space-x-4">
             <Link href="#" className="text-gray-700 hover:text-green-600 transition-colors">
               <FaSearch className="text-xl" />
@@ -39,11 +66,74 @@ export default function Home() {
               <FaShoppingCart className="text-xl" />
               <span className="absolute -top-2 -right-2 bg-green-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
             </Link>
-            <button className="md:hidden text-gray-700">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden text-gray-700 focus:outline-none z-50"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? (
+                <FaTimes className="w-6 h-6" />
+              ) : (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
             </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        <div
+          className={`fixed inset-0 bg-white z-40 transform transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+            } md:hidden`}
+        >
+          <div className="container mx-auto px-4 py-20">
+            <nav>
+              <ul className="flex flex-col space-y-6 text-center">
+                <li>
+                  <Link href="#home" className="text-2xl text-green-600 font-medium" onClick={handleLinkClick}>
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#products" className="text-2xl text-gray-700 hover:text-green-600 transition-colors" onClick={handleLinkClick}>
+                    Products
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#categories" className="text-2xl text-gray-700 hover:text-green-600 transition-colors" onClick={handleLinkClick}>
+                    Categories
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#offers" className="text-2xl text-gray-700 hover:text-green-600 transition-colors" onClick={handleLinkClick}>
+                    Offers
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#testimonials" className="text-2xl text-gray-700 hover:text-green-600 transition-colors" onClick={handleLinkClick}>
+                    Testimonials
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#contact" className="text-2xl text-gray-700 hover:text-green-600 transition-colors" onClick={handleLinkClick}>
+                    Contact
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+            <div className="mt-12 flex justify-center space-x-6">
+              <Link href="#" className="bg-gray-200 hover:bg-green-600 hover:text-white transition-colors w-10 h-10 rounded-full flex items-center justify-center">
+                <FaFacebookF />
+              </Link>
+              <Link href="#" className="bg-gray-200 hover:bg-green-600 hover:text-white transition-colors w-10 h-10 rounded-full flex items-center justify-center">
+                <FaTwitter />
+              </Link>
+              <Link href="#" className="bg-gray-200 hover:bg-green-600 hover:text-white transition-colors w-10 h-10 rounded-full flex items-center justify-center">
+                <FaInstagram />
+              </Link>
+            </div>
           </div>
         </div>
       </header>
@@ -64,19 +154,21 @@ export default function Home() {
                 </Link>
               </div>
             </div>
-            <div className="md:w-1/2" data-aos="fade-left">
+            <div className="md:w-1/2 w-full" data-aos="fade-left">
               <div className="relative h-80 md:h-96 w-full rounded-lg overflow-hidden">
                 <Image
                   src="https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80"
                   alt="Fresh Groceries"
                   fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover"
                 />
               </div>
             </div>
           </div>
         </div>
-        <div className="wave-container">
+        <div className="wave-container mt-10">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className="w-full">
             <path fill="#ffffff" fillOpacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,149.3C960,160,1056,160,1152,138.7C1248,117,1344,75,1392,53.3L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
           </svg>
@@ -137,6 +229,7 @@ export default function Home() {
                   src="https://images.unsplash.com/photo-1610348725531-843dff563e2c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
                   alt="Fruits & Vegetables"
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover"
                 />
               </div>
@@ -153,6 +246,7 @@ export default function Home() {
                   src="https://images.unsplash.com/photo-1608198093002-ad4e005484ec?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1332&q=80"
                   alt="Dairy & Bakery"
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover"
                 />
               </div>
@@ -169,6 +263,7 @@ export default function Home() {
                   src="https://images.unsplash.com/photo-1621939514649-280e2ee25f60?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
                   alt="Staples & Grains"
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover"
                 />
               </div>
@@ -185,6 +280,7 @@ export default function Home() {
                   src="https://images.unsplash.com/photo-1500217052183-bc01eee1a74e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZHJpbmt8ZW58MHx8MHx8fDA%3D"
                   alt="Beverages"
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover"
                 />
               </div>
@@ -215,6 +311,7 @@ export default function Home() {
                     src="https://images.unsplash.com/photo-1550258987-190a2d41a8ba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80"
                     alt="Organic Apples"
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     className="object-cover"
                   />
                 </div>
@@ -248,6 +345,7 @@ export default function Home() {
                     src="https://images.unsplash.com/photo-1589927986089-35812388d1f4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
                     alt="Fresh Milk"
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     className="object-cover"
                   />
                 </div>
@@ -279,6 +377,7 @@ export default function Home() {
                   src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
                   alt="Whole Wheat Bread"
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover"
                 />
               </div>
@@ -310,6 +409,7 @@ export default function Home() {
                     src="https://images.unsplash.com/photo-1603569283847-aa295f0d016a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1172&q=80"
                     alt="Basmati Rice"
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     className="object-cover"
                   />
                 </div>
@@ -358,7 +458,7 @@ export default function Home() {
                   <h3 className="text-xl font-semibold text-green-600 mb-2">Weekend Special</h3>
                   <h2 className="text-3xl font-bold text-gray-800 mb-4">30% OFF</h2>
                   <p className="text-gray-600 mb-2">On all fruits and vegetables</p>
-                  <p className="text-sm text-gray-500 mb-6">Valid till: 31st August 2023</p>
+                  <p className="text-sm text-gray-500 mb-6">Valid till: 30th April 2025</p>
                   <Link href="#" className="inline-block px-6 py-2 bg-green-600 text-white font-medium rounded-full hover:bg-green-700 transition-colors">
                     Shop Now
                   </Link>
@@ -368,6 +468,7 @@ export default function Home() {
                     src="https://images.unsplash.com/photo-1610348725531-843dff563e2c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
                     alt="Weekend Special"
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover"
                   />
                 </div>
@@ -411,6 +512,7 @@ export default function Home() {
                       src="https://randomuser.me/api/portraits/women/32.jpg"
                       alt="Customer"
                       fill
+                      sizes="96px"
                       className="object-cover"
                     />
                   </div>
@@ -468,6 +570,7 @@ export default function Home() {
                   src="https://cdn.dribbble.com/userupload/18296897/file/original-afa30e0fe6dcdb5fb5059f6cc3fb980c.png?resize=1024x768&vertical=center"
                   alt="KiranaKart Mobile App"
                   fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-contain"
                 />
               </div>
@@ -650,7 +753,7 @@ export default function Home() {
           <div className="border-t border-gray-700 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="mb-4 md:mb-0">
-                <p className="text-gray-400">&copy; 2023 KiranaKart. All Rights Reserved.</p>
+                <p className="text-gray-400">&copy; 2025 KiranaKart. All Rights Reserved.</p>
               </div>
               <div className="flex flex-wrap gap-4">
                 <Link href="#" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</Link>
@@ -664,7 +767,7 @@ export default function Home() {
       </footer>
 
       {/* Back to Top Button */}
-      <Link href="#" className="fixed bottom-8 right-8 bg-green-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-green-700 transition-colors">
+      <Link href="#" className="fixed bottom-8 right-8 bg-green-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-green-700 transition-colors z-30">
         <FaArrowUp />
       </Link>
     </main>
