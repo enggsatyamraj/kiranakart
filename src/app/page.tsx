@@ -44,7 +44,7 @@ export default function Home() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:block">
+          <nav className="hidden xl:block">
             <ul className="flex space-x-6">
               <li><Link href="#home" className="text-green-600 font-medium">Home</Link></li>
               <li><Link href="#products" className="text-gray-700 hover:text-green-600 transition-colors">Products</Link></li>
@@ -69,7 +69,7 @@ export default function Home() {
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden text-gray-700 focus:outline-none z-50"
+              className="xl:hidden text-gray-700 focus:outline-none z-50"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? (
@@ -86,7 +86,7 @@ export default function Home() {
         {/* Mobile Menu */}
         <div
           className={`fixed inset-0 bg-white z-40 transform transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-            } md:hidden`}
+            } xl:hidden`}
         >
           <div className="container mx-auto px-4 py-20">
             <nav>
